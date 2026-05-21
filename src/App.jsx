@@ -450,6 +450,32 @@ function AdminPortal() {
         <button className="mt-5 rounded-2xl bg-slate-900 px-5 py-3 font-semibold text-white">
           Save Lesson
         </button>
+
+        <div className="mt-8 rounded-3xl bg-white p-6 shadow-sm">
+          <h3 className="text-2xl font-black">Upload Worksheet</h3>
+          <p className="mt-2 text-slate-600">
+            Add a worksheet name, level, subject and file link.
+          </p>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            <input className="rounded-2xl border bg-white px-4 py-3 outline-none" placeholder="Worksheet title" />
+
+            <select className="rounded-2xl border bg-white px-4 py-3 outline-none">
+              <option>Early Level</option>
+              <option>First Level</option>
+              <option>Second Level</option>
+              <option>11+ Preparation</option>
+            </select>
+
+            <input className="rounded-2xl border bg-white px-4 py-3 outline-none" placeholder="Subject e.g. Numeracy" />
+
+            <input className="rounded-2xl border bg-white px-4 py-3 outline-none" placeholder="PDF / worksheet link" />
+          </div>
+
+          <button className="mt-5 rounded-2xl bg-slate-900 px-5 py-3 font-semibold text-white">
+            Save Worksheet
+          </button>
+        </div>
       </div>
     </div>
   );
