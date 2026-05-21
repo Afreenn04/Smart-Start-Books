@@ -25,15 +25,16 @@ function CardContent({ children, className = "" }) {
 }
 
 function Button({ children, className = "", variant = "", ...props }) {
+  const base =
+    "cursor-pointer font-semibold transition";
+
+  const style =
+    variant === "outline"
+      ? "bg-white text-slate-900 border border-slate-300"
+      : "bg-slate-900 text-white border border-slate-900";
+
   return (
-    <button
-      className={`bg-slate-900 text-white cursor-pointer font-semibold ${
-        variant === "outline"
-          ? "bg-white text-slate-900 border border-slate-300"
-          : ""
-      } ${className}`}
-      {...props}
-    >
+    <button className={`${base} ${style} ${className}`} {...props}>
       {children}
     </button>
   );
