@@ -145,9 +145,17 @@ export default function App() {
           </nav>
 
           <div className="hidden gap-2 md:flex">
-            <Button onClick={() => setActivePortal("student")} className="rounded-2xl px-4 py-2">Student</Button>
-            <Button onClick={() => setActivePortal("parent")} variant="outline" className="rounded-2xl px-4 py-2">Parent</Button>
-            <Button onClick={() => setActivePortal("admin")} variant="outline" className="rounded-2xl px-4 py-2">Admin</Button>
+            <a href="/student" className="rounded-2xl bg-slate-900 px-4 py-2 text-white font-semibold">
+  Student
+</a>
+
+<a href="/parent" className="rounded-2xl border border-slate-300 bg-white px-4 py-2 text-slate-900 font-semibold">
+  Parent
+</a>
+
+<a href="/admin" className="rounded-2xl border border-slate-300 bg-white px-4 py-2 text-slate-900 font-semibold">
+  Admin
+</a>
           </div>
 
           <Menu className="h-6 w-6 md:hidden" />
