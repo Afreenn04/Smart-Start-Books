@@ -3,10 +3,10 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import App from "./App";
-import Home from "./pages/Home";
-import StudentDashboard from "./pages/StudentDashboard";
-import ParentDashboard from "./pages/ParentDashboard";
-import AdminDashboard from "./pages/AdminDashboard";
+import Home from "./pages/Home.jsx";
+import StudentDashboard from "./pages/StudentDashboard.jsx";
+import ParentDashboard from "./pages/ParentDashboard.jsx";
+import AdminDashboard from "./pages/AdminDashboard.jsx";
 
 import "./index.css";
 
