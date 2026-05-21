@@ -1,3 +1,8 @@
 export default function ParentDashboard() {
-  return <h1>Parent Dashboard</h1>;
+  return (
+    <div style={{ padding: "40px" }}>
+      <h1>Parent Dashboard</h1>
+      <p>Welcome to the parent portal.</p>
+    </div>
+  );
 }
