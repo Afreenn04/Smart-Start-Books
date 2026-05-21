@@ -249,13 +249,98 @@ export default function App() {
           )}
 
           {activePortal === "admin" && (
-            <DashboardCard
-              icon={<LockKeyhole className="h-9 w-9" />}
-              title="Admin Dashboard"
-              text="Admin tools help you add syllabus topics, lessons, quizzes, worksheets, students and parents."
-              items={["Add syllabus topic", "Create lesson", "Upload worksheet", "Manage users"]}
-            />
-          )}
+  <div className="rounded-[2rem] bg-white p-8 shadow-sm">
+    <div className="mb-8 flex items-center justify-between">
+      <div>
+        <p className="text-sm font-semibold text-slate-500">
+          Smart Start Books
+        </p>
+        <h2 className="text-3xl font-black">Admin Dashboard</h2>
+        <p className="mt-2 text-slate-600">
+          Manage curriculum, lessons, worksheets and student progress.
+        </p>
+      </div>
+
+      <button className="rounded-2xl bg-slate-900 px-5 py-3 font-semibold text-white">
+        Add Lesson
+      </button>
+    </div>
+
+    <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+      {[
+        "Curriculum Management",
+        "Lesson Builder",
+        "Worksheet Uploads",
+        "Student Reports",
+      ].map((item) => (
+        <div
+          key={item}
+          className="rounded-3xl bg-slate-50 p-6 shadow-sm"
+        >
+          <h3 className="text-xl font-black">{item}</h3>
+
+          <p className="mt-3 text-sm text-slate-600">
+            Manage and organise portal content.
+          </p>
+
+          <button className="mt-5 rounded-2xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white">
+            Open
+          </button>
+        </div>
+      ))}
+    </div>
+
+    <div className="mt-8 grid gap-6 lg:grid-cols-2">
+      <div className="rounded-3xl bg-slate-50 p-6">
+        <h3 className="text-2xl font-black">
+          Recent Admin Tasks
+        </h3>
+
+        <div className="mt-5 space-y-3">
+          {[
+            "Add P4 fractions worksheet",
+            "Review phonics lesson",
+            "Upload reasoning quiz",
+            "Update parent reports",
+          ].map((task) => (
+            <div
+              key={task}
+              className="rounded-2xl bg-white p-4 font-medium shadow-sm"
+            >
+              {task}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="rounded-3xl bg-slate-50 p-6">
+        <h3 className="text-2xl font-black">
+          Curriculum Levels
+        </h3>
+
+        <div className="mt-5 space-y-3">
+          {[
+            "Early Level",
+            "First Level",
+            "Second Level",
+            "11+ Preparation",
+          ].map((level) => (
+            <div
+              key={level}
+              className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm"
+            >
+              <span className="font-semibold">{level}</span>
+
+              <button className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white">
+                Edit
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+)}
         </section>
 
         <section id="lessons" className="mx-auto max-w-7xl px-5 py-12">
