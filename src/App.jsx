@@ -300,7 +300,12 @@ const [selectedLesson, setSelectedLesson] = useState(null);
                   <p className="mb-2 text-xs font-bold uppercase tracking-wide text-slate-500">{lesson.subject}</p>
                   <h3 className="text-lg font-black">{lesson.title}</h3>
                   <p className="mt-3 text-sm text-slate-500">{lesson.age} • {lesson.time} • {lesson.level}</p>
-                  <Button className="mt-6 w-full rounded-2xl py-3">Open Lesson</Button>
+                  <Button
+  onClick={() => setSelectedLesson(lesson)}
+  className="mt-6 w-full rounded-2xl py-3"
+>
+  Open Lesson
+</Button>
                 </CardContent>
               </Card>
             ))}
