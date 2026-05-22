@@ -407,6 +407,90 @@ const [selectedLesson, setSelectedLesson] = useState(null);
             ))}
           </div>
         </section>
+        {selectedLesson && (
+  <section className="mx-auto max-w-5xl px-5 py-12">
+    <div className="rounded-[2rem] bg-white p-8 shadow-sm">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-sm font-semibold text-slate-500">
+            {selectedLesson.subject}
+          </p>
+
+          <h2 className="mt-2 text-4xl font-black">
+            {selectedLesson.title}
+          </h2>
+        </div>
+
+        <button
+          onClick={() => setSelectedLesson(null)}
+          className="rounded-2xl border px-4 py-2 font-semibold"
+        >
+          Close
+        </button>
+      </div>
+
+      <div className="mt-8 grid gap-6 md:grid-cols-3">
+        <div className="rounded-3xl bg-slate-50 p-5">
+          <p className="text-sm font-semibold text-slate-500">
+            Lesson Time
+          </p>
+
+          <h3 className="mt-2 text-2xl font-black">
+            {selectedLesson.time}
+          </h3>
+        </div>
+
+        <div className="rounded-3xl bg-slate-50 p-5">
+          <p className="text-sm font-semibold text-slate-500">
+            CfE Level
+          </p>
+
+          <h3 className="mt-2 text-2xl font-black">
+            {selectedLesson.level}
+          </h3>
+        </div>
+
+        <div className="rounded-3xl bg-slate-50 p-5">
+          <p className="text-sm font-semibold text-slate-500">
+            Progress
+          </p>
+
+          <h3 className="mt-2 text-2xl font-black">
+            {selectedLesson.progress}%
+          </h3>
+        </div>
+      </div>
+
+      <div className="mt-8 rounded-3xl bg-slate-50 p-6">
+        <h3 className="text-2xl font-black">
+          Lesson Overview
+        </h3>
+
+        <p className="mt-4 leading-7 text-slate-700">
+          This lesson helps children build confidence through guided
+          Scottish CfE learning activities, discussion, practice and
+          simple exercises.
+        </p>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
+          {[
+            "Watch lesson video",
+            "Complete worksheet",
+            "Try mini quiz",
+            "Mark as completed",
+          ].map((item) => (
+            <button
+              key={item}
+              className="rounded-2xl bg-slate-900 px-5 py-4 font-semibold text-white"
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+)}
       </main>
     </div>
   );
