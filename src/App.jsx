@@ -123,13 +123,15 @@ const [selectedLesson, setSelectedLesson] = useState(null);
     }
 
     const lesson = {
-      title: newLesson.title,
-      age: "Ages 8-12",
-      time: newLesson.time || "20 min",
-      level: newLesson.cfeLevel,
-      subject: newLesson.subject,
-      progress: 0,
-    };
+  title: newLesson.title,
+  age: "Ages 8-12",
+  time: newLesson.time || "20 min",
+  level: newLesson.cfeLevel,
+  subject: newLesson.subject,
+  topic: newLesson.topic,
+  description: newLesson.description,
+  progress: 0,
+};
 
     setLessons([lesson, ...lessons]);
 
@@ -467,9 +469,7 @@ const [selectedLesson, setSelectedLesson] = useState(null);
         </h3>
 
         <p className="mt-4 leading-7 text-slate-700">
-          This lesson helps children build confidence through guided
-          Scottish CfE learning activities, discussion, practice and
-          simple exercises.
+         {selectedLesson.description || "This lesson helps children build confidence through guided Scottish CfE learning activities, discussion, practice and simple exercises."}
         </p>
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">
