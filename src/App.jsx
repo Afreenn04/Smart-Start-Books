@@ -1,5 +1,4 @@
-import React, { useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useMemo, useState } from "react";import { motion } from "framer-motion";
 import {
   BookOpen,
   CalendarDays,
@@ -101,12 +100,39 @@ export default function App() {
   const [subject, setSubject] = useState("All");
   const [activePortal, setActivePortal] = useState("student");
 const [selectedLesson, setSelectedLesson] = useState(null);
-  const [lessons, setLessons] = useState([
-    { title: "Maths: Fractions Made Easy", age: "Ages 8-11", time: "20 min", level: "Beginner", subject: "Maths", progress: 70 },
-    { title: "English: Build Better Sentences", age: "Ages 7-10", time: "15 min", level: "Beginner", subject: "English", progress: 45 },
-    { title: "Science: The Water Cycle", age: "Ages 8-12", time: "25 min", level: "Intermediate", subject: "Science", progress: 20 },
-  ]);
+  const defaultLessons = [
+  {
+    title: "Maths: Fractions Made Easy",
+    age: "Ages 8-11",
+    time: "20 min",
+    level: "Beginner",
+    subject: "Maths",
+    progress: 70,
+  },
+  {
+    title: "English: Build Better Sentences",
+    age: "Ages 7-10",
+    time: "15 min",
+    level: "Beginner",
+    subject: "English",
+    progress: 45,
+  },
+];
 
+const [lessons, setLessons] = useState(() => {
+  const savedLessons = localStorage.getItem("smartStartLessons");
+
+  return savedLessons
+    ? JSON.parse(savedLessons)
+    : defaultLessons;
+});
+
+useEffect(() => {
+  localStorage.setItem(
+    "smartStartLessons",
+    JSON.stringify(lessons)
+  );
+}, [lessons]);
   const [newLesson, setNewLesson] = useState({
     title: "",
     cfeLevel: "Early Level",
