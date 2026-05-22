@@ -38,13 +38,6 @@ function Button({ children, className = "", variant = "", ...props }) {
   );
 }
 
-const lessons = [
-  { title: "Maths: Fractions Made Easy", age: "Ages 8-11", time: "20 min", level: "Beginner", subject: "Maths", progress: 70 },
-  { title: "English: Build Better Sentences", age: "Ages 7-10", time: "15 min", level: "Beginner", subject: "English", progress: 45 },
-  { title: "Science: The Water Cycle", age: "Ages 8-12", time: "25 min", level: "Intermediate", subject: "Science", progress: 20 },
-  { title: "Coding: First Steps with Logic", age: "Ages 10-13", time: "30 min", level: "Beginner", subject: "Coding", progress: 10 },
-];
-
 const plans = [
   "Watch one short lesson",
   "Complete practice questions",
@@ -108,13 +101,55 @@ export default function App() {
   const [subject, setSubject] = useState("All");
   const [activePortal, setActivePortal] = useState("student");
 
+  const [lessons, setLessons] = useState([
+    { title: "Maths: Fractions Made Easy", age: "Ages 8-11", time: "20 min", level: "Beginner", subject: "Maths", progress: 70 },
+    { title: "English: Build Better Sentences", age: "Ages 7-10", time: "15 min", level: "Beginner", subject: "English", progress: 45 },
+    { title: "Science: The Water Cycle", age: "Ages 8-12", time: "25 min", level: "Intermediate", subject: "Science", progress: 20 },
+  ]);
+
+  const [newLesson, setNewLesson] = useState({
+    title: "",
+    cfeLevel: "Early Level",
+    subject: "",
+    topic: "",
+    description: "",
+    time: "20 min",
+  });
+
+  function handleAddLesson() {
+    if (!newLesson.title || !newLesson.subject) {
+      alert("Please add a lesson title and subject.");
+      return;
+    }
+
+    const lesson = {
+      title: newLesson.title,
+      age: "Ages 8-12",
+      time: newLesson.time || "20 min",
+      level: newLesson.cfeLevel,
+      subject: newLesson.subject,
+      progress: 0,
+    };
+
+    setLessons([lesson, ...lessons]);
+
+    setNewLesson({
+      title: "",
+      cfeLevel: "Early Level",
+      subject: "",
+      topic: "",
+      description: "",
+      time: "20 min",
+    });
+  }
+
   const filteredLessons = useMemo(() => {
     return lessons.filter((lesson) => {
       const matchesQuery = lesson.title.toLowerCase().includes(query.toLowerCase());
       const matchesSubject = subject === "All" || lesson.subject === subject;
       return matchesQuery && matchesSubject;
     });
-  }, [query, subject]);
+  }, [query, subject, lessons]);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
@@ -205,12 +240,7 @@ export default function App() {
 
           <div className="my-6 flex flex-wrap gap-3">
             {["student", "parent", "admin"].map((portal) => (
-              <Button
-                key={portal}
-                onClick={() => setActivePortal(portal)}
-                variant={activePortal === portal ? "" : "outline"}
-                className="rounded-2xl px-5 py-3 capitalize"
-              >
+              <Button key={portal} onClick={() => setActivePortal(portal)} variant={activePortal === portal ? "" : "outline"} className="rounded-2xl px-5 py-3 capitalize">
                 {portal} Portal
               </Button>
             ))}
@@ -221,7 +251,7 @@ export default function App() {
               icon={<GraduationCap className="h-9 w-9" />}
               title="Student Dashboard"
               text="Children can open lessons, complete quizzes, collect stars and follow a daily study routine."
-              items={["Continue lesson", "Take quiz", "View rewards", "Check progress"]}
+              items={lessons.slice(0, 4).map((lesson) => lesson.title)}
             />
           )}
 
@@ -234,7 +264,13 @@ export default function App() {
             />
           )}
 
-          {activePortal === "admin" && <AdminPortal />}
+          {activePortal === "admin" && (
+            <AdminPortal
+              newLesson={newLesson}
+              setNewLesson={setNewLesson}
+              handleAddLesson={handleAddLesson}
+            />
+          )}
         </section>
 
         <section id="lessons" className="mx-auto max-w-7xl px-5 py-12">
@@ -249,14 +285,14 @@ export default function App() {
                 <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search lessons" className="w-full bg-transparent text-sm outline-none" />
               </div>
               <select value={subject} onChange={(e) => setSubject(e.target.value)} className="rounded-2xl border bg-white px-4 py-3 text-sm shadow-sm outline-none">
-                {["All", "Maths", "English", "Science", "Coding"].map((option) => <option key={option}>{option}</option>)}
+                {["All", ...new Set(lessons.map((lesson) => lesson.subject))].map((option) => <option key={option}>{option}</option>)}
               </select>
             </div>
           </div>
 
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
             {filteredLessons.map((lesson) => (
-              <Card key={lesson.title} className="rounded-3xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+              <Card key={`${lesson.title}-${lesson.subject}`} className="rounded-3xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
                 <CardContent className="p-6">
                   <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100">
                     <BookOpen className="h-6 w-6" />
@@ -335,7 +371,7 @@ export default function App() {
           <p className="font-semibold text-slate-500">Scottish Curriculum for Excellence</p>
           <h2 className="text-3xl font-black">CfE-aligned syllabus pathway</h2>
           <p className="mt-3 max-w-3xl text-slate-600">
-            Organised by CfE levels. Early Level covers Early Years to P1, First Level covers P2-P4, and Second Level covers P5-P7. The 11+ section is separate because it is not part of CfE.
+            Organised by CfE levels. Early Level covers Early Years to P1, First Level covers P2-P4, and Second Level covers P5-P7.
           </p>
 
           <div className="mt-8 space-y-8">
@@ -392,28 +428,12 @@ function DashboardCard({ icon, title, text, items }) {
   );
 }
 
-function AdminPortal() {
+function AdminPortal({ newLesson, setNewLesson, handleAddLesson }) {
   const curriculumLevels = [
-    {
-      level: "Early Level",
-      stage: "Early Years & Primary 1",
-      subjects: ["Literacy", "Numeracy", "Health & Wellbeing", "Sciences"],
-    },
-    {
-      level: "First Level",
-      stage: "Primary 2 to Primary 4",
-      subjects: ["Literacy", "Numeracy", "Sciences", "Technologies"],
-    },
-    {
-      level: "Second Level",
-      stage: "Primary 5 to Primary 7",
-      subjects: ["Literacy", "Numeracy", "Sciences", "Social Studies"],
-    },
-    {
-      level: "11+ Preparation",
-      stage: "Optional Entrance Exam Support",
-      subjects: ["English", "Maths", "Verbal Reasoning", "Non-Verbal Reasoning"],
-    },
+    { level: "Early Level", stage: "Early Years & Primary 1", subjects: ["Literacy", "Numeracy", "Health & Wellbeing", "Sciences"] },
+    { level: "First Level", stage: "Primary 2 to Primary 4", subjects: ["Literacy", "Numeracy", "Sciences", "Technologies"] },
+    { level: "Second Level", stage: "Primary 5 to Primary 7", subjects: ["Literacy", "Numeracy", "Sciences", "Social Studies"] },
+    { level: "11+ Preparation", stage: "Optional Entrance Exam Support", subjects: ["English", "Maths", "Verbal Reasoning", "Non-Verbal Reasoning"] },
   ];
 
   return (
@@ -422,14 +442,8 @@ function AdminPortal() {
         <div>
           <p className="text-sm font-semibold text-slate-500">Smart Start Books</p>
           <h2 className="text-3xl font-black">Admin Dashboard</h2>
-          <p className="mt-2 text-slate-600">
-            Manage curriculum, lessons, worksheets and student progress.
-          </p>
+          <p className="mt-2 text-slate-600">Manage curriculum, lessons, worksheets and student progress.</p>
         </div>
-
-        <button className="rounded-2xl bg-slate-900 px-5 py-3 font-semibold text-white">
-          Add Lesson
-        </button>
       </div>
 
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
@@ -437,36 +451,26 @@ function AdminPortal() {
           <div key={item} className="rounded-3xl bg-slate-50 p-6 shadow-sm">
             <h3 className="text-xl font-black">{item}</h3>
             <p className="mt-3 text-sm text-slate-600">Manage and organise portal content.</p>
-            <button className="mt-5 rounded-2xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white">
-              Open
-            </button>
+            <button className="mt-5 rounded-2xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white">Open</button>
           </div>
         ))}
       </div>
 
       <div className="mt-8 rounded-3xl bg-slate-50 p-6">
         <h3 className="text-2xl font-black">Curriculum Management</h3>
-        <p className="mt-2 text-slate-600">
-          Review and organise your CfE levels before creating lessons.
-        </p>
+        <p className="mt-2 text-slate-600">Review and organise your CfE levels before creating lessons.</p>
 
         <div className="mt-6 grid gap-5 md:grid-cols-2">
           {curriculumLevels.map((item) => (
             <div key={item.level} className="rounded-3xl bg-white p-6 shadow-sm">
               <p className="text-sm font-semibold text-slate-500">{item.stage}</p>
               <h4 className="mt-2 text-xl font-black">{item.level}</h4>
-
               <div className="mt-4 flex flex-wrap gap-2">
                 {item.subjects.map((subject) => (
-                  <span key={subject} className="rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold">
-                    {subject}
-                  </span>
+                  <span key={subject} className="rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold">{subject}</span>
                 ))}
               </div>
-
-              <button className="mt-5 rounded-2xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white">
-                Edit Level
-              </button>
+              <button className="mt-5 rounded-2xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white">Edit Level</button>
             </div>
           ))}
         </div>
@@ -474,59 +478,59 @@ function AdminPortal() {
 
       <div className="mt-8 rounded-3xl bg-slate-50 p-6">
         <h3 className="text-2xl font-black">Add New Lesson</h3>
-        <p className="mt-2 text-slate-600">
-          Create a lesson by CfE level, subject and topic.
-        </p>
+        <p className="mt-2 text-slate-600">Create a lesson by CfE level, subject and topic.</p>
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">
-          <input className="rounded-2xl border bg-white px-4 py-3 outline-none" placeholder="Lesson title" />
-          <select className="rounded-2xl border bg-white px-4 py-3 outline-none">
+          <input
+            className="rounded-2xl border bg-white px-4 py-3 outline-none"
+            placeholder="Lesson title"
+            value={newLesson.title}
+            onChange={(e) => setNewLesson({ ...newLesson, title: e.target.value })}
+          />
+
+          <select
+            className="rounded-2xl border bg-white px-4 py-3 outline-none"
+            value={newLesson.cfeLevel}
+            onChange={(e) => setNewLesson({ ...newLesson, cfeLevel: e.target.value })}
+          >
             <option>Early Level</option>
             <option>First Level</option>
             <option>Second Level</option>
             <option>11+ Preparation</option>
           </select>
-          <select className="rounded-2xl border bg-white px-4 py-3 outline-none">
-            <option>Literacy & English</option>
-            <option>Numeracy & Mathematics</option>
-            <option>Sciences</option>
-            <option>Health & Wellbeing</option>
-            <option>Technologies</option>
-          </select>
-          <input className="rounded-2xl border bg-white px-4 py-3 outline-none" placeholder="Topic e.g. Fractions" />
+
+          <input
+            className="rounded-2xl border bg-white px-4 py-3 outline-none"
+            placeholder="Subject e.g. Maths"
+            value={newLesson.subject}
+            onChange={(e) => setNewLesson({ ...newLesson, subject: e.target.value })}
+          />
+
+          <input
+            className="rounded-2xl border bg-white px-4 py-3 outline-none"
+            placeholder="Topic e.g. Fractions"
+            value={newLesson.topic}
+            onChange={(e) => setNewLesson({ ...newLesson, topic: e.target.value })}
+          />
         </div>
 
-        <textarea className="mt-4 min-h-32 w-full rounded-2xl border bg-white px-4 py-3 outline-none" placeholder="Lesson description" />
+        <textarea
+          className="mt-4 min-h-32 w-full rounded-2xl border bg-white px-4 py-3 outline-none"
+          placeholder="Lesson description"
+          value={newLesson.description}
+          onChange={(e) => setNewLesson({ ...newLesson, description: e.target.value })}
+        />
 
-        <button className="mt-5 rounded-2xl bg-slate-900 px-5 py-3 font-semibold text-white">
+        <input
+          className="mt-4 w-full rounded-2xl border bg-white px-4 py-3 outline-none"
+          placeholder="Lesson time e.g. 20 min"
+          value={newLesson.time}
+          onChange={(e) => setNewLesson({ ...newLesson, time: e.target.value })}
+        />
+
+        <button onClick={handleAddLesson} className="mt-5 rounded-2xl bg-slate-900 px-5 py-3 font-semibold text-white">
           Save Lesson
         </button>
-
-        <div className="mt-8 rounded-3xl bg-white p-6 shadow-sm">
-          <h3 className="text-2xl font-black">Upload Worksheet</h3>
-          <p className="mt-2 text-slate-600">
-            Add a worksheet name, level, subject and file link.
-          </p>
-
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            <input className="rounded-2xl border bg-white px-4 py-3 outline-none" placeholder="Worksheet title" />
-
-            <select className="rounded-2xl border bg-white px-4 py-3 outline-none">
-              <option>Early Level</option>
-              <option>First Level</option>
-              <option>Second Level</option>
-              <option>11+ Preparation</option>
-            </select>
-
-            <input className="rounded-2xl border bg-white px-4 py-3 outline-none" placeholder="Subject e.g. Numeracy" />
-
-            <input className="rounded-2xl border bg-white px-4 py-3 outline-none" placeholder="PDF / worksheet link" />
-          </div>
-
-          <button className="mt-5 rounded-2xl bg-slate-900 px-5 py-3 font-semibold text-white">
-            Save Worksheet
-          </button>
-        </div>
       </div>
     </div>
   );
