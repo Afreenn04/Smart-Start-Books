@@ -100,7 +100,7 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [subject, setSubject] = useState("All");
   const [activePortal, setActivePortal] = useState("student");
-
+const [selectedLesson, setSelectedLesson] = useState(null);
   const [lessons, setLessons] = useState([
     { title: "Maths: Fractions Made Easy", age: "Ages 8-11", time: "20 min", level: "Beginner", subject: "Maths", progress: 70 },
     { title: "English: Build Better Sentences", age: "Ages 7-10", time: "15 min", level: "Beginner", subject: "English", progress: 45 },
